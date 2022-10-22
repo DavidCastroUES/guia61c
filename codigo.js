@@ -1,7 +1,7 @@
 /*Nombre: David José Castro Climaco
 Carnet: CC18117
 Guia 61b*/
-var fila="<tr><td class='id'></td><td class='foto'></td><td class='price'></td><td class='title'></td><td class='description'></td><td class='category'></td></tr>";
+var fila="<tr><td class='id'></td><td class='foto'></td><td class='price'></td><td class='title'></td><td class='description'></td><td class='category'></td><td class='opciones'></td></tr>";
 	 var productos=null;
   function codigoCat(catstr) {
 	var code="null";
@@ -12,7 +12,11 @@ var fila="<tr><td class='id'></td><td class='foto'></td><td class='price'></td><
 		case "damas":code="c4";break;
 	}
 	return code;
-}   
+}
+function crearBoton(id){
+	var boton="<button class='x' onclick='borrarProducto("+id+");'>Borrar</button>";
+	return boton;
+}
 	  var orden=0;
 	  
 	  
@@ -33,14 +37,15 @@ var fila="<tr><td class='id'></td><td class='foto'></td><td class='price'></td><
 	  descriptions=document.getElementsByClassName("description");
 	  categories=document.getElementsByClassName("category");   
 	  fotos=document.getElementsByClassName("foto");   
-	  prices=document.getElementsByClassName("price"); 
+	  prices=document.getElementsByClassName("price");
+	  opciones = document.getElementsByClassName("opciones"); 
 	  if(orden===0) {orden=-1;precio.innerHTML="Precio"}
 	  else
 	     if(orden==1) {ordenarAsc(productos,"price");precio.innerHTML="Precio A";precio.style.color="darkgreen"}
 	     else 
 	       if(orden==-1) {ordenarDesc(productos,"price");precio.innerHTML="Precio D";precio.style.color="blue"}
 	
-		  
+		  var boton;
 	  	  listado.style.display="block";
 	  for(nfila=0;nfila<num;nfila++) {
         ids[nfila].innerHTML=productos[nfila].id;
@@ -48,6 +53,8 @@ var fila="<tr><td class='id'></td><td class='foto'></td><td class='price'></td><
 		descriptions[nfila].innerHTML=productos[nfila].description;
 		categories[nfila].innerHTML=productos[nfila].category;
 		catcode=codigoCat(productos[nfila].category);
+		opciones[nfila].innerHTML = crearBoton(productos[nfila].id);
+
 
 		tr=categories[nfila].parentElement;
 		tr.setAttribute("class",catcode);
@@ -106,4 +113,19 @@ function agregarProducto(){
 		}).then(response=>response.json()).then(data=>result=data);
 	console.log(result);
 	obtenerProductos();
+}
+
+function crearBoton(id){
+	var boton="<button class='x' onclick='borrarProducto("+id+");'>Borrar</button>";
+	return boton;
+}
+
+function borrarProducto(id) {
+	var delresult;
+	var url='https://retoolapi.dev/KonFal/productos/'+id;
+	
+	  fetch(url,{method:"DELETE"})
+            .then(response=>response.json())
+            .then(data=>delresult=data);	
+		 				 
 }
